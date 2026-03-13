@@ -36,18 +36,18 @@
 --|					can be changed by the inputs
 --|					
 --|
---|                 xxx State Encoding key
+--|                 Binary State Encoding key
 --|                 --------------------
 --|                  State | Encoding
 --|                 --------------------
---|                  OFF   | 
---|                  ON    | 
---|                  R1    | 
---|                  R2    | 
---|                  R3    | 
---|                  L1    | 
---|                  L2    | 
---|                  L3    | 
+--|                  OFF   000 
+--|                  ON    001 
+--|                  R1    010
+--|                  R2    011
+--|                  R3    100
+--|                  L1    101
+--|                  L2    110
+--|                  L3    111
 --|                 --------------------
 --|
 --|
@@ -86,23 +86,45 @@ library ieee;
   use ieee.numeric_std.all;
  
 entity thunderbird_fsm is 
---  port(
-	
---  );
+  port(
+	i_clk, i_reset : in std_logic;
+	i_left, i_right : in std_logic;
+	o_light_L : out std_logic_vector(2 downto 0);
+	o_light_R : out std_logic_vector(2 downto 0)
+ );
 end thunderbird_fsm;
 
 architecture thunderbird_fsm_arch of thunderbird_fsm is 
 
 -- CONSTANTS ------------------------------------------------------------------
-  
+    signal f_Q : STD_LOGIC_VECTOR(2 downto 0) := "000";
+    signal f_Q_next : STD_LOGIC_VECTOR(2 downto 0) := "000";
 begin
 
 	-- CONCURRENT STATEMENTS --------------------------------------------------------	
-	
+	--next-state
+	f_Q_next(0) <= (not f_Q(2) and not f_Q(1) and not f_Q(0)) or f_Q(1);
+	f_Q_next(1) <= (not f_Q(2) and not f_Q(0)) or (f_Q(2));
+	f_Q_next(2) <= not f_Q(2) or f_Q(2);
+	--output
+	o_light_R(0) <= f_Q(1) or (not f_Q(0));
+	o_light_R(1) <= f_Q(1) or (f_Q(2) and not f_Q(1) and not f_Q(0));
+	o_light_R(2) <= f_Q(2) and f_Q(0);
+	o_light_L(0) <= (not f_Q(2) and not f_Q(1) and f_Q(0)) or (f_Q(2) and f_Q(1) and not f_Q(0));
+	o_light_L(1) <= f_Q(1) or (f_Q(2) and not f_Q(1) and not f_Q(0));
+	o_light_L(2) <= f_Q(2) and not f_Q(0);
     ---------------------------------------------------------------------------------
 	
 	-- PROCESSES --------------------------------------------------------------------
-    
+	
+    register_proc : process (i_clk, i_reset)
+    begin
+        if i_reset = '1' then
+            f_Q <= "001";
+        elsif (rising_edge(i_clk)) then
+            f_Q <= f_Q_next;
+        end if;
+    end process register_proc;
 	-----------------------------------------------------					   
 				  
 end thunderbird_fsm_arch;
