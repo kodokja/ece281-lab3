@@ -78,7 +78,7 @@ architecture test_bench of thunderbird_fsm_tb is
 	
 begin
 	-- PORT MAPS ----------------------------------------
-	thunderbird0 : thunderbird_fsm
+	thunderbirdTest : thunderbird_fsm
 	   port map(
 	       i_clk => w_clk,
 	       i_reset => w_reset,
@@ -106,9 +106,37 @@ begin
 	-----------------------------------------------------
 	
 	-- Test Plan Process --------------------------------
-	w_right <= '0'; w_left <= '0'; wait for k_clk_period;
-	   assert w_blinkers = "000000" report "should be off with off" severity failure;
-	
+	sim_proc : process
+	begin
+	    w_reset <= '1'; wait for k_clk_period;
+	       assert w_blinkers = "000000" report "failed reset" severity failure;
+	    w_reset <= '0'; wait for k_clk_period;
+	    
+        w_right <= '0'; w_left <= '0'; wait for k_clk_period*1;
+           assert w_blinkers = "000000" report "should be off with off" severity failure;
+        w_right <= '1'; w_left <= '1'; wait for k_clk_period;
+           assert w_blinkers = "111111" report "should be on with on" severity failure;
+           
+        w_right <= '0'; w_left <= '1'; wait for k_clk_period*2;
+           assert w_blinkers = "001000" report "should be off with off" severity failure;
+        wait for k_clk_period;
+            assert w_blinkers = "011000" report "should be off with off" severity failure;
+        wait for k_clk_period;
+            assert w_blinkers = "111000" report "should be off with off" severity failure;
+           
+        w_right <= '1'; w_left <= '0'; wait for k_clk_period*2;
+           assert w_blinkers = "000100" report "should be off with off" severity failure;
+        wait for k_clk_period;
+            assert w_blinkers = "000110" report "should be off with off" severity failure;
+        wait for k_clk_period;
+            assert w_blinkers = "000111" report "should be off with off" severity failure;
+           
+           
+        w_right <= '0'; w_left <= '0'; wait for k_clk_period;
+           assert w_blinkers = "000000" report "should be off with off" severity failure;   
+        
+	   wait;
+	end process;
 	-----------------------------------------------------	
 	
 end test_bench;
