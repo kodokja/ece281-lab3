@@ -89,8 +89,8 @@ entity thunderbird_fsm is
   port(
 	i_clk, i_reset : in std_logic;
 	i_left, i_right : in std_logic;
-	o_light_L : out std_logic_vector(2 downto 0);
-	o_light_R : out std_logic_vector(2 downto 0)
+	o_lights_L : out std_logic_vector(2 downto 0);
+	o_lights_R : out std_logic_vector(2 downto 0)
  );
 end thunderbird_fsm;
 
@@ -107,12 +107,12 @@ begin
 	f_Q_next(1) <= (not f_Q(2) and not f_Q(1) and not f_Q(0) and not i_left and i_right) or (not f_Q(2) and f_Q(1) and not f_Q(0)) or (f_Q(2) and not f_Q(1) and f_Q(0)) or (f_Q(2) and f_Q(1) and not f_Q(0));
 	f_Q_next(0) <= (not f_Q(2) and not f_Q(1) and not f_Q(0) and i_left and i_right) or (not f_Q(2) and not f_Q(1) and not f_Q(0) and i_left and not i_right) or (not f_Q(2) and f_Q(1) and not f_Q(0)) or (f_Q(2) and f_Q(1) and not f_Q(0));
 	--output
-	o_light_R(0) <= (not f_Q(2) and not f_Q(1) and f_Q(0)) or (not f_Q(2) and f_Q(1) and not f_Q(0)) or (not f_Q(2) and f_Q(1) and f_Q(0)) or (f_Q(2) and not f_Q(1) and not f_Q(0));
-	o_light_R(1) <= (not f_Q(2) and not f_Q(1) and f_Q(0)) or (not f_Q(2) and f_Q(1) and f_Q(0)) or (f_Q(2) and not f_Q(1) and not f_Q(0));
-	o_light_R(2) <= (not f_Q(2) and not f_Q(1) and f_Q(0)) or (f_Q(2) and not f_Q(1) and not f_Q(0));
-	o_light_L(0) <= (not f_Q(2) and not f_Q(1) and f_Q(0)) or (f_Q(2) and not f_Q(1) and f_Q(0)) or (f_Q(2) and f_Q(1) and not f_Q(0)) or (f_Q(2) and f_Q(1) and f_Q(0));
-	o_light_L(1) <= (not f_Q(2) and not f_Q(1) and f_Q(0)) or (f_Q(2) and f_Q(1) and not f_Q(0)) or (f_Q(2) and f_Q(1) and f_Q(0));
-	o_light_L(2) <= (not f_Q(2) and not f_Q(1) and f_Q(0)) or (f_Q(2) and f_Q(1) and f_Q(0));
+	o_lights_R(0) <= (not f_Q(2) and not f_Q(1) and f_Q(0)) or (not f_Q(2) and f_Q(1) and not f_Q(0)) or (not f_Q(2) and f_Q(1) and f_Q(0)) or (f_Q(2) and not f_Q(1) and not f_Q(0));
+	o_lights_R(1) <= (not f_Q(2) and not f_Q(1) and f_Q(0)) or (not f_Q(2) and f_Q(1) and f_Q(0)) or (f_Q(2) and not f_Q(1) and not f_Q(0));
+	o_lights_R(2) <= (not f_Q(2) and not f_Q(1) and f_Q(0)) or (f_Q(2) and not f_Q(1) and not f_Q(0));
+	o_lights_L(0) <= (not f_Q(2) and not f_Q(1) and f_Q(0)) or (f_Q(2) and not f_Q(1) and f_Q(0)) or (f_Q(2) and f_Q(1) and not f_Q(0)) or (f_Q(2) and f_Q(1) and f_Q(0));
+	o_lights_L(1) <= (not f_Q(2) and not f_Q(1) and f_Q(0)) or (f_Q(2) and f_Q(1) and not f_Q(0)) or (f_Q(2) and f_Q(1) and f_Q(0));
+	o_lights_L(2) <= (not f_Q(2) and not f_Q(1) and f_Q(0)) or (f_Q(2) and f_Q(1) and f_Q(0));
     ---------------------------------------------------------------------------------
 	
 	-- PROCESSES --------------------------------------------------------------------
